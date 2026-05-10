@@ -1,0 +1,7 @@
+.codex
+cecalc.exe
+src/*.o
+src/*.d
+src/ratpak/*.o
+src/ratpak/*.d
+src/resources.o
