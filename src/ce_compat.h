@@ -100,6 +100,8 @@ SIZE_T WINAPI CeGlobalCompact(DWORD minFree);
 // the calc's "fetch the menu I just attached" pattern keeps working.
 HMENU WINAPI CeGetMenu(HWND hwnd);
 BOOL  WINAPI CeSetMenu(HWND hwnd, HMENU menu);
+BOOL  WINAPI CeSetMenuResource(HWND hwnd, HINSTANCE hinst, UINT menuId,
+                               HMENU menu);
 int   WINAPI CeGetMenuBarHeight(HWND hwnd);
 #define GetMenu CeGetMenu
 #define SetMenu CeSetMenu

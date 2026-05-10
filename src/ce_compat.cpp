@@ -4,7 +4,7 @@
 // or about-box behavior — Windows CE has no HTML Help engine of its own.
 
 #include <windows.h>
-#include <aygshell.h>
+#include <commctrl.h>
 #include "ce_compat.h"
 
 static const WCHAR kCeProfileRegPath[] = L"Software\\CECalc";
@@ -160,6 +160,28 @@ static const WCHAR kMenuProp[] = L"CECalc.Menu";
 static const WCHAR kMenuBarProp[] = L"CECalc.MenuBar";
 static const WCHAR kMenuBarHeightProp[] = L"CECalc.MenuBarHeight";
 
+static void OffsetDialogChildren(HWND hwnd, HWND hwndSkip, int dy)
+{
+    HWND hwndChild;
+
+    if (!dy)
+        return;
+
+    for (hwndChild = GetWindow(hwnd, GW_CHILD); hwndChild;
+         hwndChild = GetWindow(hwndChild, GW_HWNDNEXT)) {
+        RECT rc;
+
+        if (hwndChild == hwndSkip)
+            continue;
+
+        if (GetWindowRect(hwndChild, &rc)) {
+            MapWindowPoints(NULL, hwnd, (LPPOINT)&rc, 2);
+            SetWindowPos(hwndChild, NULL, rc.left, rc.top + dy, 0, 0,
+                         SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOZORDER);
+        }
+    }
+}
+
 extern "C" HMENU WINAPI CeGetMenu(HWND hwnd)
 {
     return (HMENU)GetProp(hwnd, kMenuProp);
@@ -173,7 +195,6 @@ extern "C" int WINAPI CeGetMenuBarHeight(HWND hwnd)
 extern "C" BOOL WINAPI CeSetMenu(HWND hwnd, HMENU menu)
 {
     HWND hwndMenuBar = (HWND)GetProp(hwnd, kMenuBarProp);
-    int cyOld = CeGetMenuBarHeight(hwnd);
 
     if (hwndMenuBar) {
         DestroyWindow(hwndMenuBar);
@@ -181,43 +202,72 @@ extern "C" BOOL WINAPI CeSetMenu(HWND hwnd, HMENU menu)
         RemoveProp(hwnd, kMenuBarHeightProp);
     }
 
-    if (menu == NULL) {
+    if (menu == NULL)
         RemoveProp(hwnd, kMenuProp);
-        return TRUE;
+    else
+        SetProp(hwnd, kMenuProp, (HANDLE)menu);
+
+    return TRUE;
+}
+
+extern "C" BOOL WINAPI CeSetMenuResource(HWND hwnd, HINSTANCE hinst,
+                                         UINT menuId, HMENU menu)
+{
+    RECT rc;
+    int cy = 0;
+    int cyOld = CeGetMenuBarHeight(hwnd);
+    HWND hwndMenuBar = (HWND)GetProp(hwnd, kMenuBarProp);
+
+    if (hwndMenuBar) {
+        DestroyWindow(hwndMenuBar);
+        RemoveProp(hwnd, kMenuBarProp);
+        RemoveProp(hwnd, kMenuBarHeightProp);
     }
 
-    SetProp(hwnd, kMenuProp, (HANDLE)menu);
-
-    SHMENUBARINFO mbi;
-    ZeroMemory(&mbi, sizeof(mbi));
-    mbi.cbSize = sizeof(mbi);
-    mbi.hwndParent = hwnd;
-    mbi.dwFlags = SHCMBF_HMENU;
-    mbi.nToolBarId = (UINT)menu;
-    mbi.hInstRes = NULL;
-
-    if (SHCreateMenuBar(&mbi)) {
-        RECT rc;
-        int cy = 0;
-
-        ShowWindow(mbi.hwndMB, SW_SHOW);
-        UpdateWindow(mbi.hwndMB);
-
-        if (GetWindowRect(mbi.hwndMB, &rc))
-            cy = rc.bottom - rc.top;
-
-        SetProp(hwnd, kMenuBarProp, (HANDLE)mbi.hwndMB);
-        SetProp(hwnd, kMenuBarHeightProp, (HANDLE)(LONG_PTR)cy);
-
-        if (cy != cyOld && GetWindowRect(hwnd, &rc)) {
+    if (menu == NULL || menuId == 0) {
+        RemoveProp(hwnd, kMenuProp);
+        OffsetDialogChildren(hwnd, NULL, -cyOld);
+        if (cyOld && GetWindowRect(hwnd, &rc)) {
             SetWindowPos(hwnd, NULL, 0, 0, rc.right - rc.left,
-                         rc.bottom - rc.top + cy - cyOld,
+                         rc.bottom - rc.top - cyOld,
                          SWP_NOMOVE | SWP_NOACTIVATE | SWP_NOZORDER);
         }
         return TRUE;
     }
 
-    return FALSE;
+    SetProp(hwnd, kMenuProp, (HANDLE)menu);
+
+    hwndMenuBar = CommandBar_Create(hinst, hwnd, 1);
+    if (!hwndMenuBar)
+        return FALSE;
+
+    if (!CommandBar_InsertMenubar(hwndMenuBar, hinst, (WORD)menuId, 0)) {
+        DestroyWindow(hwndMenuBar);
+        return FALSE;
+    }
+
+    CommandBar_Show(hwndMenuBar, TRUE);
+    CommandBar_DrawMenuBar(hwndMenuBar, 0);
+    ShowWindow(hwndMenuBar, SW_SHOW);
+    UpdateWindow(hwndMenuBar);
+
+    cy = CommandBar_Height(hwndMenuBar);
+    if (cy <= 0 && GetWindowRect(hwndMenuBar, &rc))
+        cy = rc.bottom - rc.top;
+
+    HMENU liveMenu = CommandBar_GetMenu(hwndMenuBar, 0);
+    SetProp(hwnd, kMenuProp, (HANDLE)(liveMenu ? liveMenu : menu));
+    SetProp(hwnd, kMenuBarProp, (HANDLE)hwndMenuBar);
+    SetProp(hwnd, kMenuBarHeightProp, (HANDLE)(LONG_PTR)cy);
+
+    if (cy != cyOld && GetWindowRect(hwnd, &rc)) {
+        OffsetDialogChildren(hwnd, hwndMenuBar, cy - cyOld);
+        SetWindowPos(hwnd, NULL, 0, 0, rc.right - rc.left,
+                     rc.bottom - rc.top + cy - cyOld,
+                     SWP_NOMOVE | SWP_NOACTIVATE | SWP_NOZORDER);
+    }
+
+    return TRUE;
 }
 
 extern "C" LPSTR WINAPI CeCharNextA(LPCSTR p)

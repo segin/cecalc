@@ -155,9 +155,9 @@ SwitchModes(DWORD wRadix, int nDecMode, int nHexMode)
         id=IDM_DEG+nDecMode;
 
         if (NULL != g_hDecMenu)
-            SetMenu(g_hwndDlg, g_hDecMenu);
+            CeSetMenuResource(g_hwndDlg, hInst, IDM_DECCALCMENU, g_hDecMenu);
 
-        CheckMenuRadioItem(g_hDecMenu, IDM_DEG, IDM_GRAD, id, MF_BYCOMMAND);
+        CheckMenuRadioItem(GetMenu(g_hwndDlg), IDM_DEG, IDM_GRAD, id, MF_BYCOMMAND);
         CheckRadioButton(g_hwndDlg,IDC_DEG, IDC_GRAD, id);
     }
     else
@@ -165,9 +165,9 @@ SwitchModes(DWORD wRadix, int nDecMode, int nHexMode)
         id=IDM_QWORD+nHexMode;
 
         if (NULL != g_hHexMenu)
-            SetMenu(g_hwndDlg, g_hHexMenu);
+            CeSetMenuResource(g_hwndDlg, hInst, IDM_HEXCALCMENU, g_hHexMenu);
 
-        CheckMenuRadioItem(g_hHexMenu, IDM_QWORD, IDM_BYTE, id, MF_BYCOMMAND);
+        CheckMenuRadioItem(GetMenu(g_hwndDlg), IDM_QWORD, IDM_BYTE, id, MF_BYCOMMAND);
         CheckRadioButton(g_hwndDlg,IDC_QWORD, IDC_BYTE, id);
     }
 
@@ -185,5 +185,4 @@ SwitchModes(DWORD wRadix, int nDecMode, int nHexMode)
                     (wRadix != 10) ? SW_HIDE : SW_SHOW );
     }
 }
-
 

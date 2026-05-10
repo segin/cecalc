@@ -635,7 +635,7 @@ VOID  APIENTRY InitSciCalc(BOOL bViewChange)
 
         if ( g_hwndDlg )
         {
-            SetMenu(g_hwndDlg, g_hDecMenu);
+            CeSetMenuResource(g_hwndDlg, NULL, 0, NULL);
             bUseOldPos = TRUE;
             GetWindowRect( g_hwndDlg, &rect );
             DestroyWindow( g_hwndDlg );
@@ -659,7 +659,7 @@ VOID  APIENTRY InitSciCalc(BOOL bViewChange)
             // Windows CE dialog templates ignore the MENU clause; load the
             // menu explicitly here so g_hDecMenu mirrors the desktop flow.
             g_hDecMenu = LoadMenu(hInst, MAKEINTRESOURCE(IDM_CALCMENU));
-            SetMenu(g_hwndDlg, g_hDecMenu);
+            CeSetMenuResource(g_hwndDlg, hInst, IDM_CALCMENU, g_hDecMenu);
 
 #ifdef USE_MIRRORING
             if (g_fLayoutRTL)
@@ -685,7 +685,7 @@ VOID  APIENTRY InitSciCalc(BOOL bViewChange)
             }
             g_hDecMenu = LoadMenu(hInst, MAKEINTRESOURCE(IDM_DECCALCMENU));
             g_hHexMenu = LoadMenu(hInst, MAKEINTRESOURCE(IDM_HEXCALCMENU));
-            SetMenu(g_hwndDlg, g_hDecMenu);
+            CeSetMenuResource(g_hwndDlg, hInst, IDM_DECCALCMENU, g_hDecMenu);
 
 #ifdef USE_MIRRORING
             if (g_fLayoutRTL)
@@ -732,10 +732,10 @@ VOID  APIENTRY InitSciCalc(BOOL bViewChange)
 
         // ensure the menu items for Scientific and Standard are set correctly
 
-        CheckMenuRadioItem(g_hDecMenu, IDM_SC, IDM_SSC, 
+        CheckMenuRadioItem(GetMenu(g_hwndDlg), IDM_SC, IDM_SSC,
                            (nCalc == 0 ? IDM_SC : IDM_SSC), MF_BYCOMMAND); 
 
-        CheckMenuItem(g_hDecMenu, IDM_USE_SEPARATOR, 
+        CheckMenuItem(GetMenu(g_hwndDlg), IDM_USE_SEPARATOR,
                       MF_BYCOMMAND | (gbUseSep ? MF_CHECKED : MF_UNCHECKED));  
 
         if (g_hHexMenu)

@@ -13,7 +13,7 @@ CFLAGS   = $(COMMON_FLAGS) -std=gnu99
 CXXFLAGS = $(COMMON_FLAGS) -fpermissive -fexceptions -Wno-write-strings \
            -fkeep-inline-functions
 
-LDFLAGS  = -lcommctrl -lcommdlg -laygshell -lcoredll -static-libgcc -static-libstdc++
+LDFLAGS  = -lcommctrl -lcommdlg -lcoredll -static-libgcc -static-libstdc++
 
 CALC_SRC = src/calc.cpp src/input.cpp src/scicomm.cpp src/scidisp.cpp \
            src/scifunc.cpp src/scikeys.cpp src/scimath.cpp src/scimenu.cpp \

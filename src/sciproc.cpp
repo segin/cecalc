@@ -256,8 +256,7 @@ LPARAM         lParam)
                     // from a regular menu font to a jumbo menu font and shrink the
                     // client area if you switch from a jumbo menu font to a regular
                     // menu font.
-                    iDelta = rc.bottom + CeGetMenuBarHeight(g_hwndDlg)
-                             - HIWORD(lParam);
+                    iDelta = rc.bottom - HIWORD(lParam);
                     if ( iDelta )
                     {
                         GetWindowRect( g_hwndDlg, &rc );
