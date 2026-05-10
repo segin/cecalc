@@ -56,8 +56,8 @@ HNUMOBJ *       lphnoStatNum;   /* Holding place for stat data.         */
 
 VOID  APIENTRY SetStat (BOOL bOnOff)
 {
-    static int aStatOnlyKeys[] = { IDC_AVE, IDC_B_SUM, IDC_DEV, IDC_DATA };
-    int i;
+    static const int aStatOnlyKeys[] = { IDC_AVE, IDC_B_SUM, IDC_DEV, IDC_DATA };
+    size_t i;
 
     if (bOnOff)
     {

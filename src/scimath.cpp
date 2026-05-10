@@ -58,10 +58,10 @@ int QuickLog2( int iNum )
     }
 
     // if our number isn't a perfect square
-    if ( iNum = iNum >> 1 )
+    if ((iNum = iNum >> 1))
     {
         // find the largest digit
-        while ( iNum = iNum >> 1 )
+        while ((iNum = iNum >> 1))
            ++iRes;
 
         // and then add two
@@ -87,12 +87,9 @@ int QuickLog2( int iNum )
 void UpdateMaxIntDigits()
 {
     extern int gcIntDigits;
-    int iRemainderBits;
-
     if ( nRadix == 10 )
     {
         gcIntDigits = nPrecision;
-        iRemainderBits = 0;
     }
     else
     {
@@ -103,13 +100,11 @@ void UpdateMaxIntDigits()
         ASSERT( 0 != log2 );     // same as ASSERT( nRadix != 1 )
 
         gcIntDigits = dwWordBitWidth / log2;
-        iRemainderBits = dwWordBitWidth % log2;
     }
 }
 
 void BaseOrPrecisionChanged( void ) 
 {
-    extern LONG dwWordBitWidth;
     extern int  gcIntDigits;
 
     UpdateMaxIntDigits();

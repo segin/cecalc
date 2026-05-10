@@ -12,6 +12,11 @@ COMMON_FLAGS = -O2 -Wall -Wno-unused-parameter -MMD -MP \
 CFLAGS   = $(COMMON_FLAGS) -std=gnu99
 CXXFLAGS = $(COMMON_FLAGS) -fpermissive -fexceptions -Wno-write-strings \
            -fkeep-inline-functions
+RATPAK_CXXFLAGS = $(CXXFLAGS) -Wno-unknown-pragmas -Wno-unused-value \
+                  -Wno-unused-variable -Wno-unused-but-set-variable \
+                  -Wno-parentheses -Wno-switch
+RATPAK_CFLAGS = $(CFLAGS) -Wno-missing-braces -Wno-override-init
+RATPAK_SUPPORT_CFLAGS = $(RATPAK_CFLAGS) -w
 
 LDFLAGS  = -lcommctrl -lcommdlg -lcoredll -static-libgcc -static-libstdc++
 
@@ -46,10 +51,10 @@ src/%.o: src/%.cpp
 # zero-length array initialization (a C-only Microsoft extension). Build that
 # one file as C; the throw-using ratpak files still go through g++.
 src/ratpak/support.o: src/ratpak/support.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(RATPAK_SUPPORT_CFLAGS) -c $< -o $@
 
 src/ratpak/%.o: src/ratpak/%.c
-	$(CXX) $(CXXFLAGS) -x c++ -c $< -o $@
+	$(CXX) $(RATPAK_CXXFLAGS) -x c++ -c $< -o $@
 
 src/resources.o: src/resources.rc src/resource.h src/calc.ico
 	$(WINDRES) -Isrc $< $@

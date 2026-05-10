@@ -23,7 +23,7 @@ extern LONG        nPrecision;
 /****************************************************************************\
 * HNUMOBJ NEAR DoOperation (short nOperation, HNUMOBJ fpx)
 *
-* Routines to perform standard operations &|^~<<>>+-/*% and pwr.
+* Routines to perform standard operations &, |, ^, ~, shifts, arithmetic, and pwr.
 *
 \****************************************************************************/
 

@@ -175,10 +175,8 @@ extern "C" int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 {
     MSG        msg;
     INT        nx;
-    TCHAR      *psz;
-    WORD       cch = 0, cchTotal = 0;
+    WORD       cchTotal = 0;
     HANDLE     hMem;
-    TCHAR      szTempString[100];
 
     CHECKPOINT(L"A (WinMain entry)");
     {
@@ -364,7 +362,7 @@ extern "C" int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 #define IsWhiteSpace( ch )  ((ch) == TEXT(' ') || (ch) == TEXT('\t'))
 #define IsDigit( ch )       ((ch) >= TEXT('0') && (ch) <= TEXT('9'))
 
-LPTSTR TtoL( LPTSTR psz, LONG *pl ) {
+LPCTSTR TtoL( LPCTSTR psz, LONG *pl ) {
     LONG l = 0;
 
     while( IsDigit( *psz ) ) {
@@ -547,7 +545,7 @@ void InitialOneTimeOnlySetup()
 //////////////////////////////////////////////////
 void EverythingResettingNumberSetup()
 {
-    int i;
+    size_t i;
 
     // Initialize the decimal input code.
     CIO_vClear( &gcio );
@@ -580,8 +578,6 @@ VOID  APIENTRY InitSciCalc(BOOL bViewChange)
 {
     TCHAR   chLastDec;
     TCHAR   chLastSep;
-    int     nLastSepLen;
-    HMENU   hMenu;
     BOOL    bRepaint=FALSE;
     RECT    rect = {0,0,0,0};
 

@@ -300,8 +300,9 @@ VOID NEAR RealProcessCommands(WPARAM wParam)
         /* In that case we better use the number before the operator  */
         /* was entered, otherwise, things like 5+ 1/x give Divide By  */
         /* zero.  This way 5+=gives 10 like most calculators do.      */
-        if (nLastCom >= IDC_AND && nLastCom <= IDC_PWR)
+        if (nLastCom >= IDC_AND && nLastCom <= IDC_PWR) {
             NumObjAssign( &ghnoNum, ghnoLastNum );
+        }
 
         SetWaitCursor(TRUE);
         SciCalcFunctions ( &ghnoNum, (DWORD)wParam);
@@ -426,8 +427,9 @@ VOID NEAR RealProcessCommands(WPARAM wParam)
 
                 /* Last thing keyed in was an operator.  Lets do the op on*/
                 /* a duplicate of the last entry.                         */
-                if ((nLastCom >= IDC_AND) && (nLastCom <= IDC_PWR))
+                if ((nLastCom >= IDC_AND) && (nLastCom <= IDC_PWR)) {
                     NumObjAssign( &ghnoNum, ghnoLastNum );
+                }
 
                 if (nOpCode) /* Is there a valid operation around?        */
                 {
@@ -507,7 +509,7 @@ VOID NEAR RealProcessCommands(WPARAM wParam)
                 /* now process the precedence stack till we get to an
                     opcode which is zero. */
 
-                while (nOpCode = nPrecOp[--nPrecNum])
+                while ((nOpCode = nPrecOp[--nPrecNum]))
                 {
                     if (NumObjOK( ghnoPrecNum[nPrecNum] ))
                         NumObjAssign(&ghnoLastNum , ghnoPrecNum[nPrecNum]);

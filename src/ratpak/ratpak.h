@@ -546,7 +546,7 @@ extern BOOL rat_ge( IN PRAT a, IN PRAT b );
 extern BOOL rat_lt( IN PRAT a, IN PRAT b );
 extern BOOL rat_le( IN PRAT a, IN PRAT b );
 extern void inbetween( IN PRAT *px, IN PRAT range );
-extern DWORDLONG __inline Mul32x32( IN DWORD a, IN DWORD b );
+extern DWORDLONG Mul32x32( IN DWORD a, IN DWORD b );
 //extern DWORDLONG __inline __fastcall Shr32xbase( IN DWORDLONG a );
 extern void factnum( IN OUT PLINKEDLIST *ppllfact, PNUMBER pnum );
 extern void trimit( IN OUT PRAT *px );

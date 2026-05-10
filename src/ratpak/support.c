@@ -64,7 +64,15 @@ DUPNUM(v->pq,(&(init_q_##v)));
 static int cbitsofprecision = RATIO_FOR_DECIMAL * DECIMAL *
                             CALC_DECIMAL_DIGITS_DEFAULT;
 
+#if defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+#pragma GCC diagnostic ignored "-Wextra"
+#endif
 #include <ratconst.h>
+#if defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif
 
 #endif
 

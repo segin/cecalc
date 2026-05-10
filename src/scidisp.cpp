@@ -80,8 +80,9 @@ void DisplayNum(void)
             gldPrevious.bRecord     != gbRecord )
     {
         // Assign is an expensive operation, only do when really needed
-        if ( ghnoNum )
+        if ( ghnoNum ) {
             NumObjAssign( &gldPrevious.hnoNum, ghnoNum );
+        }
 
         gldPrevious.nPrecision = nPrecision;
         gldPrevious.nRadix     = nRadix;
@@ -421,4 +422,3 @@ AddNumSeparator(TCHAR sep, int sepLen, PTSTR szDisplay, PTSTR szSepDisplay)
     lstrcpy(dest,dec);
 
 }
-

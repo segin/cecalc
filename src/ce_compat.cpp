@@ -5,6 +5,7 @@
 
 #include <windows.h>
 #include <commctrl.h>
+#include <string.h>
 #include "ce_compat.h"
 
 static const WCHAR kCeProfileRegPath[] = L"Software\\CECalc";
@@ -48,7 +49,9 @@ extern "C" UINT WINAPI CeProfileGetInt(LPCWSTR section, LPCWSTR key,
     if (RegQueryValueExW(hKey, key, NULL, &type, (LPBYTE)buf, &cb)
             == ERROR_SUCCESS) {
         if (type == REG_DWORD && cb >= sizeof(DWORD)) {
-            result = *(const DWORD*)buf;
+            DWORD value;
+            memcpy(&value, buf, sizeof(value));
+            result = value;
         } else if (type == REG_SZ) {
             INT v = 0;
             const WCHAR *p = buf;
