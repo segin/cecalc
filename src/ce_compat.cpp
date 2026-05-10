@@ -158,18 +158,27 @@ extern "C" ATOM WINAPI CeRegisterClassEx(const WNDCLASSEX_CE *wcex)
 
 static const WCHAR kMenuProp[] = L"CECalc.Menu";
 static const WCHAR kMenuBarProp[] = L"CECalc.MenuBar";
+static const WCHAR kMenuBarHeightProp[] = L"CECalc.MenuBarHeight";
 
 extern "C" HMENU WINAPI CeGetMenu(HWND hwnd)
 {
     return (HMENU)GetProp(hwnd, kMenuProp);
 }
 
+extern "C" int WINAPI CeGetMenuBarHeight(HWND hwnd)
+{
+    return (int)(LONG_PTR)GetProp(hwnd, kMenuBarHeightProp);
+}
+
 extern "C" BOOL WINAPI CeSetMenu(HWND hwnd, HMENU menu)
 {
     HWND hwndMenuBar = (HWND)GetProp(hwnd, kMenuBarProp);
+    int cyOld = CeGetMenuBarHeight(hwnd);
+
     if (hwndMenuBar) {
         DestroyWindow(hwndMenuBar);
         RemoveProp(hwnd, kMenuBarProp);
+        RemoveProp(hwnd, kMenuBarHeightProp);
     }
 
     if (menu == NULL) {
@@ -188,7 +197,23 @@ extern "C" BOOL WINAPI CeSetMenu(HWND hwnd, HMENU menu)
     mbi.hInstRes = NULL;
 
     if (SHCreateMenuBar(&mbi)) {
+        RECT rc;
+        int cy = 0;
+
+        ShowWindow(mbi.hwndMB, SW_SHOW);
+        UpdateWindow(mbi.hwndMB);
+
+        if (GetWindowRect(mbi.hwndMB, &rc))
+            cy = rc.bottom - rc.top;
+
         SetProp(hwnd, kMenuBarProp, (HANDLE)mbi.hwndMB);
+        SetProp(hwnd, kMenuBarHeightProp, (HANDLE)(LONG_PTR)cy);
+
+        if (cy != cyOld && GetWindowRect(hwnd, &rc)) {
+            SetWindowPos(hwnd, NULL, 0, 0, rc.right - rc.left,
+                         rc.bottom - rc.top + cy - cyOld,
+                         SWP_NOMOVE | SWP_NOACTIVATE | SWP_NOZORDER);
+        }
         return TRUE;
     }
 
