@@ -113,6 +113,14 @@ VOID NEAR RealProcessCommands(WPARAM wParam)
         return;
     }
 
+    if (nCalc == 1 &&
+        (xwParam(IDM_HEX, IDM_BIN) || xwParam(IDM_QWORD, IDM_BYTE) ||
+         xwParam(IDM_DEG, IDM_GRAD)))
+    {
+        MessageBeep(0);
+        return;
+    }
+
     // Toggle Record/Display mode if appropriate.
 
     if (gbRecord)

@@ -225,6 +225,20 @@ BEGIN
         MENUITEM "S&tandard",                   IDM_SSC
         MENUITEM "&Scientific",                 IDM_SC
         MENUITEM SEPARATOR
+        MENUITEM "&Hex\tF5",                    IDM_HEX, GRAYED
+        MENUITEM "&Decimal\tF6",                IDM_DEC, GRAYED
+        MENUITEM "&Octal\tF7",                  IDM_OCT, GRAYED
+        MENUITEM "&Binary\tF8",                 IDM_BIN, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "D&egrees\tF2",                IDM_DEG, GRAYED
+        MENUITEM "&Radians\tF3",                IDM_RAD, GRAYED
+        MENUITEM "&Grads\tF4",                  IDM_GRAD, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "&Qword\tF12",                 IDM_QWORD, GRAYED
+        MENUITEM "Dwo&rd\tF2",                  IDM_DWORD, GRAYED
+        MENUITEM "&Word\tF3",                   IDM_WORD, GRAYED
+        MENUITEM "B&yte\tF4",                   IDM_BYTE, GRAYED
+        MENUITEM SEPARATOR
         MENUITEM "D&igit grouping",             IDM_USE_SEPARATOR
     END
     POPUP "&Help"
@@ -588,4 +602,3 @@ END
 
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
-

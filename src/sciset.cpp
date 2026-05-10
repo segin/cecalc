@@ -46,7 +46,7 @@ void ActivateButtons()
         if ((oldRadix == 10) || bDecMode)
         {
             // we are changing to or from decimal mode
-            for ( i = 0; i <= ARRAYSIZE(aDecOnlyKeys) ; i++ )
+            for ( i = 0; i < (int)ARRAYSIZE(aDecOnlyKeys) ; i++ )
             {
                 EnableWindow( GetDlgItem(g_hwndDlg, aDecOnlyKeys[i]), 
                               bDecMode );
@@ -185,4 +185,3 @@ SwitchModes(DWORD wRadix, int nDecMode, int nHexMode)
                     (wRadix != 10) ? SW_HIDE : SW_SHOW );
     }
 }
-
